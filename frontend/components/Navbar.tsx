@@ -2,10 +2,13 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
 import { useAccount } from "wagmi";
 import { useIsRegistered } from "@/hooks/useVaultFactory";
-import { LayoutDashboard, Vault, Zap } from "lucide-react";
+import { LayoutDashboard, Vault } from "lucide-react";
+
+const LaunchButton = dynamic(() => import("./LaunchButton"), { ssr: false });
 
 const NAV_LINKS = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -18,12 +21,13 @@ export default function Navbar() {
   const { data: isRegistered } = useIsRegistered();
   const showNav = isConnected && isRegistered;
 
+
   return (
     <header
       style={{ background: "rgba(9,10,6,0.80)", borderBottom: "1px solid var(--border)" }}
       className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl"
     >
-      <div className="max-w-7xl mx-auto px-5 h-16 flex items-center justify-between gap-6">
+      <div className="max-w-7xl mx-auto px-5 h-20 flex items-center justify-between gap-6">
 
         {/* Logo + Wordmark */}
         <Link href="/" className="flex items-center gap-3 shrink-0 group">
@@ -34,23 +38,14 @@ export default function Navbar() {
             height={36}
             className="transition-transform duration-300 group-hover:scale-105"
           />
-          <div className="flex flex-col leading-none">
-            <span
-              style={{ color: "var(--primary)", letterSpacing: "0.18em" }}
-              className="text-[11px] font-black uppercase"
-            >
-              FORGEX
-            </span>
-            <span style={{ color: "var(--border-strong)" }} className="text-[10px] font-bold text-center">
-              :
-            </span>
-            <span
-              style={{ color: "var(--accent)", letterSpacing: "0.14em" }}
-              className="text-[10px] font-bold uppercase"
-            >
-              VULT
-            </span>
-          </div>
+          <span
+            style={{ letterSpacing: "0.16em", lineHeight: 1 }}
+            className="text-sm font-black uppercase"
+          >
+            <span style={{ color: "var(--primary)" }}>FORGEX</span>
+            <span style={{ color: "var(--border-strong)" }} className="mx-1.5">:</span>
+            <span style={{ color: "var(--accent)" }}>VULT</span>
+          </span>
         </Link>
 
         {/* Nav links */}
@@ -77,18 +72,21 @@ export default function Navbar() {
           </nav>
         )}
 
-        {/* Right: status dot + wallet button */}
+        {/* Right: status dot + launch app + wallet button */}
         <div className="flex items-center gap-3">
-          {isConnected && (
-            <span className="hidden sm:flex items-center gap-1.5 text-xs font-semibold" style={{ color: "var(--primary)" }}>
-              <span
-                style={{ background: "var(--primary)" }}
-                className="w-1.5 h-1.5 rounded-full animate-pulse-olive"
-              />
-              Base
+          <LaunchButton />
+          {/* On landing page: show simple "Connected" pill when connected, full appkit-button otherwise */}
+          {/* On inner pages: always show full appkit-button for address/balance */}
+          {pathname === "/" && isConnected ? (
+            <span
+              style={{ background: "rgba(34,197,94,0.12)", border: "1px solid rgba(34,197,94,0.25)", color: "#22c55e" }}
+              className="px-3 py-1.5 rounded-lg text-xs font-bold"
+            >
+              Connected
             </span>
+          ) : (
+            <appkit-button />
           )}
-          <appkit-button />
         </div>
       </div>
 
