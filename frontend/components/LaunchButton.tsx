@@ -1,12 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { useAccount } from "wagmi";
+import { useWallet } from "@/lib/hooks";
 import { useToast } from "@/components/Toast";
 import { Zap } from "lucide-react";
 
 export default function LaunchButton() {
-  const { isConnected } = useAccount();
+  const { address } = useWallet();
+  const isConnected = !!address;
   const { showToast } = useToast();
 
   return (
@@ -33,7 +34,7 @@ export default function LaunchButton() {
       {/* Launch App button */}
       {isConnected ? (
         <Link
-          href="/dashboard"
+          href="/"
           className="btn btn-primary text-xs px-4 py-2 flex items-center gap-1.5"
         >
           <Zap size={12} /> Launch App
