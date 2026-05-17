@@ -1,35 +1,33 @@
 {
-  "name": "smartx-frontend",
+  "name": "paywhen-frontend",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "next lint"
   },
   "dependencies": {
-    "@reown/appkit": "^1.8.19",
-    "@reown/appkit-adapter-wagmi": "^1.8.19",
-    "@tanstack/react-query": "^5.90.21",
-    "clsx": "^2.1.1",
-    "framer-motion": "^12.38.0",
-    "lucide-react": "^0.577.0",
-    "next": "^16.1.1",
-    "react": "19.2.0",
-    "react-dom": "19.2.0",
-    "tailwind-merge": "^3.5.0",
-    "viem": "^2.47.1",
-    "wagmi": "^3.5.0"
+    "@stellar/freighter-api": "^2.0.0",
+    "@stellar/stellar-sdk": "^12.0.0",
+    "lucide-react": "^0.300.0",
+    "next": "16.1.1",
+    "next-themes": "^0.3.0",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "tailwind-merge": "^2.2.0",
+    "clsx": "^2.1.0"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "eslint": "^9",
-    "eslint-config-next": "16.0.6",
-    "tailwindcss": "^4",
-    "typescript": "^5"
+    "@types/node": "^20.10.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "autoprefixer": "^10.4.0",
+    "eslint": "^8.0.0",
+    "eslint-config-next": "16.1.1",
+    "postcss": "^8.4.0",
+    "tailwindcss": "^3.4.0",
+    "typescript": "^5.0.0"
   }
 }
