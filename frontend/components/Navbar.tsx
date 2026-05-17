@@ -19,11 +19,7 @@ export default function Navbar() {
           </span>
         </Link>
 
-        <nav className="hidden md:flex items-center gap-8 text-[11px] font-black uppercase tracking-[0.2em] text-gray-500">
-          <Link href="/" className="hover:text-green-400 transition-colors">Create</Link>
-          <Link href="/" className="hover:text-green-400 transition-colors">Dashboard</Link>
-          <Link href="/" className="hover:text-green-400 transition-colors">Protocol</Link>
-        </nav>
+
 
         <div className="flex items-center gap-4">
           <WalletConnectButton />
