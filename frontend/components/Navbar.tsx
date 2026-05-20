@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ShieldCheck } from "lucide-react";
+import { WalletConnectButton } from "./WalletConnectButton";
 
 export default function Navbar() {
   return (
@@ -13,9 +13,7 @@ export default function Navbar() {
         className="max-w-7xl mx-auto flex items-center justify-between bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-2xl px-6 py-3 shadow-2xl"
       >
         <Link href="/" className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-gradient-to-br from-green-400 to-emerald-600 rounded-lg flex items-center justify-center shadow-lg shadow-green-500/20">
-            <ShieldCheck size={18} className="text-black" />
-          </div>
+          <img src="/paywhen-logo.png" alt="PayWhen Logo" className="w-8 h-8 object-contain" />
           <span className="text-xl font-black tracking-tight bg-gradient-to-r from-green-400 to-emerald-300 bg-clip-text text-transparent">
             PayWhen
           </span>
@@ -28,7 +26,7 @@ export default function Navbar() {
         </nav>
 
         <div className="flex items-center gap-4">
-          <appkit-button />
+          <WalletConnectButton />
         </div>
       </motion.div>
     </header>
