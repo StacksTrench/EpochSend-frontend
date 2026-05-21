@@ -26,7 +26,8 @@ export default function HeroIllustration() {
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+        className="absolute top-1/2 left-1/2"
+        style={{ transform: "translate(-50%, -50%)" }}
       >
         <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="#8FA828" strokeWidth="2">
           <rect x="3" y="11" width="18" height="11" rx="2" />
