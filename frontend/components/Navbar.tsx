@@ -13,7 +13,7 @@ export default function Navbar() {
         className="max-w-7xl mx-auto flex items-center justify-between bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-2xl px-6 py-3 shadow-2xl"
       >
         <Link href="/" className="flex items-center gap-3">
-          <img src="/paywhen-logo.png" alt="PayWhen Logo" className="w-8 h-8 object-contain" />
+          <img src="/paywhen-logo.png" alt="PayWhen Logo" style={{ width: "32px", height: "32px", minWidth: "32px", minHeight: "32px", objectFit: "contain" }} />
           <span className="text-xl font-black tracking-tight bg-gradient-to-r from-green-400 to-emerald-300 bg-clip-text text-transparent">
             PayWhen
           </span>
