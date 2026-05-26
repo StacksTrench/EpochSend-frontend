@@ -5,6 +5,9 @@ import { Providers } from "./providers";
 export const metadata: Metadata = {
   title: "PayWhen",
   description: "Intent-Based Conditional Payments on Stellar",
+  icons: {
+    icon: "/paywhen.svg",
+  },
 };
 
 export default function RootLayout({
