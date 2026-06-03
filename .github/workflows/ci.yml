@@ -1,4 +1,4 @@
-name: PayWhen CI
+name: EpochSend CI
 
 on:
   push:
