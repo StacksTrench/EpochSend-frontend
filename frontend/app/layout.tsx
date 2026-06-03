@@ -3,10 +3,10 @@ import "./globals.css";
 import { Providers } from "./providers";
 
 export const metadata: Metadata = {
-  title: "PayWhen",
+  title: "EpochSend",
   description: "Intent-Based Conditional Payments on Stellar",
   icons: {
-    icon: "/paywhen.svg",
+    icon: "/epochsend.svg",
   },
 };
 
