@@ -17,6 +17,8 @@ interface EscrowItem {
   status: "Locked" | "Executed" | "Refunded";
 }
 
+import OnboardingModal from "@/components/OnboardingModal";
+
 export default function Home() {
   const { address, connect } = useWallet();
   const { createEscrow, isPending: isCreating } = useCreateEscrow();
@@ -123,6 +125,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-[#0A0E05] text-white selection:bg-[#8FA828]/30 selection:text-white">
+      <OnboardingModal />
       <Navbar />
 
       <main className="max-w-7xl mx-auto px-6 pt-32 pb-24 grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
