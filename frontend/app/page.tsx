@@ -140,7 +140,7 @@ export default function Home() {
               </span>
             </h1>
             <p className="text-gray-400 text-sm leading-relaxed max-w-md">
-              Securely lock digital assets on-chain. PayWhen automatically triggers disbursements based on strict time rules or trusted manual arbiter releases—fully decentralized, with no middleman.
+              Securely lock digital assets on-chain. EpochSend automatically triggers disbursements based on strict time rules or trusted manual arbiter releases—fully decentralized, with no middleman.
             </p>
           </div>
 

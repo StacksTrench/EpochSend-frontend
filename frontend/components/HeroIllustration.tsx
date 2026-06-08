@@ -11,8 +11,8 @@ export default function HeroIllustration() {
       className="relative w-full rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-white/[0.02]"
     >
       <img
-        src="/paywhen-banner.png"
-        alt="PayWhen Brand Banner"
+        src="/epochsend-banner.png"
+        alt="EpochSend Brand Banner"
         className="w-full h-auto object-cover aspect-[16/10] rounded-2xl hover:scale-[1.01] transition-transform duration-300 ease-out"
       />
     </motion.div>
