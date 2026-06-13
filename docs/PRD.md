@@ -1,5 +1,7 @@
 # 📘 Product Requirements Document (PRD)
 
+**Live App:** [https://epochsend.vercel.app/](https://epochsend.vercel.app/)
+
 ## Product Name: EpochSend
 
 ---

@@ -4,6 +4,8 @@
 
 > **The Next.js user interface for the EpochSend Protocol on Stellar.**
 
+**Live Demo:** [https://epochsend.vercel.app/](https://epochsend.vercel.app/)
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Built on Stellar](https://img.shields.io/badge/Built%20on-Stellar%20Soroban-purple)](https://soroban.stellar.org)
 

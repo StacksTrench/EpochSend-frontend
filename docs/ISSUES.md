@@ -1,5 +1,7 @@
 # EpochSend Frontend Issues & Roadmap
 
+**Live App:** [https://epochsend.vercel.app/](https://epochsend.vercel.app/)
+
 This document outlines the current state of the EpochSend frontend, capturing architectural debt inherited from previous iterations and charting the roadmap to a production-ready Stellar-native application.
 
 ## 🔴 Critical Architectural Debt & Refactoring

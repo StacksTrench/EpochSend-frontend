@@ -1,5 +1,7 @@
 # Stellar Frontend Integration Guide: Building dApps on Stellar 🌐
 
+**Live App:** [https://epochsend.vercel.app/](https://epochsend.vercel.app/)
+
 This guide covers how to build a modern frontend that interacts with Stellar smart contracts (Soroban). We will focus on using the **Freighter Wallet** and the **Stellar SDK**.
 
 ---
