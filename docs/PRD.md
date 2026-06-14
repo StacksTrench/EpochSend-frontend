@@ -8,41 +8,30 @@
 
 ## 🧠 Overview
 
-**EpochSend** is an intent-based payment protocol on the **Stellar Network** that shifts the paradigm of payments from simply "sending money immediately" to "defining behavior that money follows." 
+EpochSend is an intent-based payment protocol on Stellar that shifts the focus from simply "sending money immediately" to "defining off-chain conditions that trigger on-chain transfers."
 
-It allows users to define conditions under which funds are automatically executed on-chain. Instead of sending money manually, users define rules such as:
-- “Send when delivery is confirmed”
-- “Pay every Friday”
-- “Release funds after milestone completion”
+The core idea is to bridge Web2 events with Web3 payments. Instead of requiring manual escrow release or complex smart contract logic, EpochSend allows developers and users to tie payments directly to API webhooks (like a delivery API, a successful Stripe transaction, a closed GitHub issue, or server logs). 
 
-The system converts user intent into enforceable on-chain payment logic using **Soroban smart contracts**.
+Funds lock safely in a Soroban smart contract and release automatically when our Express oracle backend receives and authenticates the off-chain trigger.
 
 ---
 
 ## 🎯 Problem Statement
 
-Payments today are fundamentally flawed for complex transactions:
-1. **Manual & Inefficient**: Sending recurring or milestone-based payments requires calendar reminders and manual intervention.
-2. **Trust-Based**: Buying services online requires either trusting the seller (paying upfront) or trusting the buyer (delivering upfront).
-3. **Non-Conditional**: Once money is sent, it's gone. There is no programmable fallback if agreements aren't met.
-
-Users often rely on third-party escrow services that charge massive fees, or they fall victim to scams and disputes.
+Everyday conditional payments are usually a pain to automate:
+1. **API Incompatibility:** Blockchain networks cannot natively listen to Web2 API webhooks, so you can't easily pay someone automatically when a shipping API says "delivered."
+2. **Trust-Based Escrow:** Typical online transactions require one party to trust the other. Pay upfront, and you hope they deliver. Deliver first, and you hope they pay.
+3. **Friction and Fees:** Traditional escrow services are slow and take a massive cut just to act as manual arbiters.
 
 ---
 
 ## 💡 The EpochSend Solution
 
-Enable programmable payments based on strictly defined conditions using the speed and low cost of Stellar.
-
-Users define:
-- **Recipient**: The destination address.
-- **Amount**: How much USDC or XLM.
-- **Trigger Condition**: Time, Manual Approval, or Oracle Data.
-
-The protocol:
-1. Holds the funds safely in an **Escrow Smart Contract**.
-2. Monitors the trigger condition passively or actively.
-3. **Executes** the payment automatically when met, OR **Refunds** the sender if a dispute timeout is reached.
+EpochSend offers a simple, automated escrow loop powered by Stellar:
+* **The Lock:** The sender locks USDC or XLM in a Soroban contract, specifying a unique `oracle_id` and a fallback deadline.
+* **The Monitor:** The Express oracle backend listens for off-chain trigger callbacks.
+* **The Release:** Once the webhook fires and checks out, the oracle backend calls the smart contract to release the funds directly to the recipient.
+* **The Fallback:** If the webhook never fires before the expiration timestamp, the sender retrieves the locked funds.
 
 ---
 
@@ -50,99 +39,67 @@ The protocol:
 
 ```mermaid
 graph TD
-    User((User)) -->|Create Conditional Payment| UI[EpochSend Miniapp]
-    UI -->|Invoke create_escrow| Contract[Soroban Escrow Contract]
+    User((Sender)) -->|1. Lock Funds / Set Trigger ID| UI[Next.js App]
+    UI -->|2. Invoke create_intent| Contract[Soroban smart contract]
     
-    subgraph Conditions
-        Time[Time-based Unlock]
-        Manual[Manual Authorization]
-        Oracle[API Webhook/Oracle]
-    end
-
-    Contract -->|Monitors| Conditions
+    API[Web2 Event / API Webhook] -->|3. Fire Trigger Event| Oracle[Express Oracle Backend]
+    Oracle -->|4. Authenticate & Sign execute_intent| Contract
     
-    Conditions -->|Condition Met| Exec[Execute Payment]
-    Conditions -->|Timeout Reached| Refund[Refund Sender]
-    
-    Exec -->|Transfer| Recipient((Recipient))
-    Refund -->|Transfer| User
+    Contract -->|5a. Condition Met| Recipient((Recipient receives funds))
+    Contract -->|5b. Timeout Reached| User((Sender gets refund))
 ```
 
 ---
 
-## 🧩 Core Features (MVP to Phase 3)
+## 🧩 Core Features (MVP)
 
-### 1. Conditional Escrow Contracts (Soroban)
-- Creates discrete escrows for every transaction.
-- Non-custodial: funds are locked by code, not a centralized entity.
+### 1. Soroban Escrow Engine
+* Creates discrete on-chain intents mapping sender, recipient, asset, amount, and trigger parameters.
+* Fully non-custodial: funds are locked in code and cannot be accessed by anyone except the recipient (on verified trigger) or the sender (on timeout).
 
-### 2. Supported Conditions
-**Phase 1: Time & Trust**
-- **Time-based**: Execute exactly at a Unix timestamp.
-- **Manual Trigger**: The designated arbiter or recipient must cryptographically sign to release funds.
+### 2. Webhook-to-Blockchain Oracle
+* Node.js / Express backend that exposes a secure ingestion endpoint for webhooks.
+* Validates event payloads, maps them to on-chain intent IDs, and executes Soroban smart contract releases.
 
-**Phase 2: Oracles**
-- **API Triggers**: Off-chain Node.js oracles that listen to webhooks (e.g., FedEx delivery confirmation, Zapier integration) and trigger the contract.
-- **Location Verification**: GPS-based releases for local transactions.
-
-### 3. Automated Refunds
-- Every escrow has a `dispute_timeout`.
-- If the condition is never met, the sender can retrieve their funds effortlessly.
+### 3. Expiration Safety Valve
+* Each intent has a hard deadline. Senders can reclaim their funds if the Web2 event fails to trigger before the deadline.
 
 ---
 
 ## 🔁 User Flow
 
-### Flow A: Creating an Escrow
-1. User connects Freighter wallet to EpochSend Miniapp.
-2. Clicks **"New Payment"**.
-3. Inputs Recipient Address, Amount (100 USDC), and Condition (e.g., "Manual Approval").
-4. User signs the transaction. Funds are deducted and locked in the Soroban contract.
+### Flow A: Creating the Payment
+1. User connects Freighter wallet to the EpochSend UI.
+2. Selects **"Create Payment"**, inputs the Recipient, the amount, the fallback deadline, and the webhook trigger ID.
+3. User signs the transaction; funds lock in the Soroban smart contract.
 
-### Flow B: Triggering Execution
-1. The Arbiter/Recipient logs into EpochSend.
-2. Navigates to the **"Active Escrows"** dashboard.
-3. Finds the pending payment and clicks **"Confirm Condition Met"**.
-4. Signs the transaction. The smart contract releases the 100 USDC to the Recipient.
+### Flow B: Webhook Execution
+1. The off-chain event occurs (e.g., a package is scanned as delivered).
+2. The shipping API sends a POST webhook to the EpochSend Express backend.
+3. The backend validates the webhook payload, matches the trigger ID, builds the release transaction, signs it, and submits it to Stellar.
+4. The smart contract releases the funds to the recipient.
 
 ---
 
 ## 🔐 Security Model
 
-- **No Centralized Custody**: EpochSend developers cannot access locked funds.
-- **Soroban Auth Framework**: Strict checks ensure only the defined trigger authority can execute a contract.
-- **Reentrancy Protection**: Follows Checks-Effects-Interactions patterns in Rust.
-- **Timeout Safety Net**: Funds can never be permanently frozen; the sender can always trigger a refund after the `dispute_timeout`.
-
----
-
-## 📊 Success Metrics
-
-- **Total Value Locked (TVL)**: Amount of USDC/XLM actively in escrow.
-- **Execution Rate**: Percentage of escrows successfully executed vs refunded.
-- **Active Users**: Number of unique wallet connections per month.
-- **Transaction Volume**: Total dollar value processed by the protocol.
+* **No Platform Custody:** EpochSend operators never hold user funds.
+* **Oracle Authorization:** Only the designated `oracle_id` address has permission to trigger a release.
+* **Clamped Expirations:** Timeout limits are enforced on-chain. Funds can never be permanently locked if an oracle goes offline.
 
 ---
 
 ## 🚀 Roadmap
 
 ### Phase 1: MVP (Current)
-- Basic Soroban `ConditionalPayment` contract.
-- Time-based and Manual conditions.
-- Next.js Miniapp Dashboard (Send/Receive tabs).
+* Pure Soroban contract with intent creation, execute, and refund flows.
+* Express backend with webhook ingestion stubs and transaction building.
+* Next.js user interface with Freighter integration.
 
-### Phase 2: Automation & Oracles
-- Backend Oracle Node for API webhooks.
-- Email/SMS notifications for escrow events.
-- Recurring subscription payments.
+### Phase 2: Production Integrations
+* Live API handlers (FedEx, Zapier, Stripe, GitHub).
+* Database layer to track Web2 webhook deliveries and prevent duplicate triggers.
+* E-mail notification system for senders and recipients.
 
-### Phase 3: Developer Ecosystem
-- EpochSend SDK for third-party dApps.
-- Multi-signature approvals.
-- Integration with Stellar fiat off-ramps (MoneyGram).
-
----
-
-## 🎯 Positioning
-**EpochSend** is the programmable financial layer for Stellar—turning intent into automated, trustless execution.
+### Phase 3: Developer Tools
+* SDK for developers to integrate EpochSend oracle escrows into their own Web2 platforms.
