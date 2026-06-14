@@ -1,10 +1,10 @@
 "use client";
 
-import { useWallet } from "@/lib/hooks";
+import { useWalletContext } from "@/contexts/WalletContext";
 import { Smartphone } from "lucide-react";
 
 export function WalletConnectButton() {
-  const { connect, address } = useWallet();
+  const { connect, address } = useWalletContext();
 
   return (
     <button

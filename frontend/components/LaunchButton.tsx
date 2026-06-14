@@ -1,13 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useWallet } from "@/lib/hooks";
+import { useWalletContext } from "@/contexts/WalletContext";
 import { useToast } from "@/components/Toast";
 import { Zap } from "lucide-react";
 
 export default function LaunchButton() {
-  const { address } = useWallet();
-  const isConnected = !!address;
+  const { isConnected } = useWalletContext();
   const { showToast } = useToast();
 
   return (
