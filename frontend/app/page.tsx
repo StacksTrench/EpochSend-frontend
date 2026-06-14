@@ -3,7 +3,8 @@
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import HeroIllustration from "@/components/HeroIllustration";
-import { useWallet, useCreateEscrow, useExecuteEscrow, useRefundEscrow } from "@/lib/hooks";
+import { useWalletContext } from "@/contexts/WalletContext";
+import { useCreateEscrow, useExecuteEscrow, useRefundEscrow } from "@/lib/hooks";
 import { Calendar, Shield, ArrowRight, Zap, RefreshCw, Lock, CheckCircle2, User } from "lucide-react";
 import { useToast } from "@/components/Toast";
 
@@ -20,7 +21,7 @@ interface EscrowItem {
 import OnboardingModal from "@/components/OnboardingModal";
 
 export default function Home() {
-  const { address, connect } = useWallet();
+  const { address, connect } = useWalletContext();
   const { createEscrow, isPending: isCreating } = useCreateEscrow();
   const { execute, isPending: isExecuting } = useExecuteEscrow();
   const { refund, isPending: isRefunding } = useRefundEscrow();
